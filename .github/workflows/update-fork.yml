@@ -1,0 +1,33 @@
+name: Update fork
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 毎日0時に実行
+  push:
+    branches:
+      - main
+
+jobs:
+  update-fork:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Git
+        run: |
+          git config --global user.name 'fujino-core-architect'
+          git config --global user.email 'sumiko.fujino@core-architect.com'
+
+      - name: Add upstream remote
+        run: git remote add upstream https://github.com/CVEProject/cvelistV5.git
+
+      - name: Fetch upstream
+        run: git fetch upstream
+
+      - name: Merge upstream changes
+        run: git merge upstream/main
+
+      - name: Push changes
+        run: git push origin main
